@@ -177,15 +177,77 @@ class Menu(object):
 
 			return True
 
+		elif (palavra=='s' or palavra=='n') and op==6 and len(palavra)>0: ### aceita palavras apenas
+
+			return True
+
 
 	def alterarDados(self):
 
 		print 'everbody is doing the time'
 
 
-	def removerDados(self):
+	def removeProdutos(self, tipo, lista):
+		numeroProd = -1
+		op = 1
+		flag=0
+		while(1):
+			if flag== 1:
+				print "Você digitou um número que não está presente na lista, por favor digite novamente: "
+			flag=1	
+			numeroProd = Menu.coletaInfo(self, "Digite o número do "+tipo+" que deseja retirar: ", op)
+			numeroProd = int(numeroProd)
 
-		print 'ou não'
+			if numeroProd<=len(lista)-1:
+				op = 6
+				resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].nome + " ? (Digite S para sim e N para não)", op)
+
+				return resp, numeroProd
+
+		
+
+	def removeItens(self, tipo, lista):
+
+		Menu.imprimeDados(self, lista, tipo)
+
+		if len(lista)>0:
+			
+			resp, numeroProd = Menu.removeProdutos(self, tipo, lista)
+			
+			if resp == 's':
+
+				lista.pop(numeroProd)
+
+			else:
+
+				while (resp=='n'):
+
+					resp, numeroProd = Menu.removeProdutos(self, tipo, lista)
+
+	def removerDados(self): ### remoção dos dados
+
+		print "O que você deseja remover ? \n"
+		print "Digite 0 para remover um produto !\n"
+		print "Digite 1 para remover um cliente !\n"
+		print "Digite 2 para remover uma venda !\n"
+		opcao = raw_input()
+
+		if int(opcao) == 0: ###### remover um produto
+
+			Menu.removeItens(self, "produto", Menu.produtos)
+
+		elif int(opcao) == 1: #### remover um cliente
+
+
+			Menu.removeItens(self, "cliente", Menu.clientes)
+
+		elif int(opcao) == 2:
+
+			Menu.removeItens(self, "venda", Menu.itensVenda)
+
+
+		else:
+			print " A opção que você digitou está incorreta, digite novamente ! "
 
 	def visualizarDados(self):
 
@@ -193,6 +255,7 @@ class Menu(object):
 		Menu.imprimeDados(self, Menu.produtos, "produto")
 		Menu.imprimeDados(self, Menu.clientes, "cliente")
 		Menu.imprimeDados(self, Menu.itemVenda, "venda")
+
 	def imprimeDados(self, dados, tipoDado):
 
 		if len(dados)==0:
@@ -206,7 +269,7 @@ class Menu(object):
 			for i in range(0, len(dados)):
 				
 				if tipoDado == "cliente":
-
+					print "Cliente " + str(i)
 					print "Nome do cliente: ", dados[i].nome
 					print "Data de nascimento do cliente: ", dados[i].dataNascimento
 					print "RG do cliente: ", dados[i].rg
@@ -214,7 +277,7 @@ class Menu(object):
 					print '\n'
 
 				elif tipoDado == "produto":
-
+					print "Produto "+ str(i)
 					print "Nome do produto: ", dados[i].nome
 					print "Código do produto: ", dados[i].codigo
 					print "Valor do produto: ", dados[i].valor
@@ -222,7 +285,7 @@ class Menu(object):
 				
 
 				elif tipoDado == "venda":
-
+					print "Venda " + str(i)
 					print "Número da venda: ", dados[i].numero
 					print "Data da venda: ", dados[i].data
 					print "Itens da venda: ", dados[i].itens
