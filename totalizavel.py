@@ -1,6 +1,7 @@
+import abc
 class Totalizavel:
-
-	def Total():
-
-
-		return valor
+### classe abstrata
+	
+	@abc.abstractmethod
+	def total(self, produtos):
+		pass

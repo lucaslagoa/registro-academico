@@ -4,13 +4,14 @@
 import produto
 import re
 import cliente
-#import venda
+import itemVenda
 
 
 class Menu(object):
 
 	produtos = [] ### lista de produtos
 	clientes = [] #### lista de pessoas
+	itemVenda = [] ### lista de itens vendidos
 
 	def adicionarDados(self):
 
@@ -50,62 +51,88 @@ class Menu(object):
 			if len(Menu.produtos)>0: ## numero, data, itens (venda)
 
 				op=5
-				nome = Menu.coletaInfo(self, "Digite o nome do Cliente: ", op)
-				op = 1 ### seria esse número o código do produto ???
-				numero = Menu.coletaInfo(self, "Digite o número da venda: ", op)
-				op = 3
-				dataVenda = Menu.coletaInfo(self, "Digite a data da venda: (no seguinte formato DD/MM/AAAA)", op)
-				flag=0
-				marcador=0
-				while(1):
-					if flag==1:
-						print "Você digitou o nome dos produtos fora do formato, por favor digite novamente! \n"
-						
-					print "Digite os produtos: (no seguinte formato: produto1, produto2, ...)"
-					flag=1
-					prod = raw_input()
-					try:
-						prod = prod.split(',')
-					except:
-						prod = prod
-
-					for i in prod:
-						if(re.match(r'\S+', i)) and len(i)>0:
-
-							for k in range(0, len(Menu.produtos)):
-								if i != Menu.produtos[k].nome:
-									print "O nome do produto que você digitou não está presente na lista!\n"
-									print "Os produtos presentes na lista são: "
-									print "----------------------------------"
-									for k in range(0, len(Menu.produtos)):
-										print Menu.produtos[k].nome
-									print "----------------------------------"
-									break
-
+				
+				if len(Menu.clientes)>0:
+					marcador = 0
+					nome = Menu.coletaInfo(self, "Digite o nome do Cliente: ", op)
+					for i in range(0, len(Menu.clientes)):
+						if Menu.clientes[i].nome == nome:
 							marcador = 1
 
-					if marcador==1: #### quer dizer que tá tudo certo, então pode instaciar de forma correta
+					if marcador == 0:
+						print "Não há clientes com este nome, por favor, digite um nome dentro desta lista ou cadastre este cliente ! \n"
+						print "Os nomes presentes na lista de clientes são: \n"
+						print "-------------------------------"
+						for i in range(0, len(Menu.clientes)):
+							print Menu.clientes[i].nomes
+						print "-------------------------------"
+						nome = " "
+					else:
+						marcador = 0
+
+				else: 
+					print "Não há clientes cadastrados. Cadastre primeiro um cliente !"
+					nome = " "
+				if nome != " ":
+					op = 1 ### seria esse número o código do produto ???
+					numero = Menu.coletaInfo(self, "Digite o número da venda: ", op)
+					op = 3
+					dataVenda = Menu.coletaInfo(self, "Digite a data da venda: (no seguinte formato DD/MM/AAAA)", op)
+					flag=0
+					marcador=0
+					while(1):
+						if flag==1:
+							print "Você digitou o nome dos produtos fora do formato, por favor digite novamente! \n"
+							
+						print "Digite os produtos: (no seguinte formato: produto1, produto2, ...)"
+						flag=1
+						prod = raw_input()
+						try:
+							prod = prod.split(',')
+						except:
+							prod = prod
+
+						for i in prod:
+							if(re.match(r'\S+', i)) and len(i)>0:
+
+								for k in range(0, len(Menu.produtos)):
+									if i == Menu.produtos[k].nome:
+										marcador = 1
+
+								
+						prod = sorted(prod) ### ordenando os produtos por nome
+
+						if marcador==1: #### quer dizer que tá tudo certo, então pode instaciar de forma correta
+							quant = []
+							for i in range(0, len(prod)):
+								op = 1
+								quant.append(Menu.coletaInfo(self, "Digite a quantidade de produtos do tipo " + prod[i] + " foram comprados: ", op))
+							precos = []
+
+							for i in range(0, len(prod)):
+								for j in range(0, len(Menu.produtos)):
+									if prod[i] == Menu.produtos[j].nome:
+										precos.append(Menu.produtos.preco)
+
+							for i in range(0, len(prod)): ### valor, quantidade, numero, data, itens
+								Menu.itemVenda.append(itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])) 
 
 
-						break
-
-					
-
-
-
-
-				
-
-
-
-
+						else:
+							print "O nome do produto que você digitou não está presente na lista!\n"
+							print "Os produtos presentes na lista são: "
+							print "----------------------------------"
+							for k in range(0, len(Menu.produtos)):
+								print Menu.produtos[k].nome
+							print "----------------------------------"
+							break
 
 			else:
 				print "Não existem produtos para serem vendidos ! Cadastre um produto para depois vende-lo !"
 
 		else:
 
-			print " A OPÇÃO QUE VOCÊ DIGITOU ESTÁ INCORRETA ! TENTE NOVAMENTE ! "
+			print " A opção que você digitou está incorreta, digite novamente ! "
 
 
 	def coletaInfo(self, pergunta, op):

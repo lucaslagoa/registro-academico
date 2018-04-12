@@ -1,4 +1,6 @@
-class Venda(Totalizavel):
+import totalizavel
+
+class Venda(totalizavel.Totalizavel):
 
 
 	def __init__(self, numero, data, itens): #### metodo contrutor
@@ -6,3 +8,10 @@ class Venda(Totalizavel):
 		self.numero = numero
 		self.data = data
 		self.itens = itens
+
+	def total(self, produtos):
+
+		valor = 0
+
+
+		return valor
