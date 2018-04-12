@@ -4,6 +4,7 @@
 import produto
 import re
 import cliente
+#import venda
 
 
 class Menu(object):
@@ -26,7 +27,7 @@ class Menu(object):
 			op = 1
 			codigo = Menu.coletaInfo(self, "Digite o codigo do produto: ", op)
 			op = 2
-			valor = Menu.coletaInfo(self, "Digite o codigo do produto: ", op)
+			valor = Menu.coletaInfo(self, "Digite o preço do produto: ", op)
 			
 			Menu.produtos.append(produto.Produto(codigo, nome, valor)) #### instancia produto
 
@@ -42,11 +43,60 @@ class Menu(object):
 			nascimento = Menu.coletaInfo(self, "Digite a sua data de nascimento: (no seguinte formato DD/MM/AAAA)", op)
 
 
-			Menu.clientes.append(rg:cliente.Cliente(nascimento, rg, nome, endereco)) ### data de nascimento, rg, nome e endereço
+			Menu.clientes.append(cliente.Cliente(nascimento, rg, nome, endereco)) ### data de nascimento, rg, nome e endereço
 		
 		elif int(opcao) == 2: ### adicionar uma venda
 
 			if len(Menu.produtos)>0: ## numero, data, itens (venda)
+
+				op=5
+				nome = Menu.coletaInfo(self, "Digite o nome do Cliente: ", op)
+				op = 1 ### seria esse número o código do produto ???
+				numero = Menu.coletaInfo(self, "Digite o número da venda: ", op)
+				op = 3
+				dataVenda = Menu.coletaInfo(self, "Digite a data da venda: (no seguinte formato DD/MM/AAAA)", op)
+				flag=0
+				marcador=0
+				while(1):
+					if flag==1:
+						print "Você digitou o nome dos produtos fora do formato, por favor digite novamente! \n"
+						
+					print "Digite os produtos: (no seguinte formato: produto1, produto2, ...)"
+					flag=1
+					prod = raw_input()
+					try:
+						prod = prod.split(',')
+					except:
+						prod = prod
+
+					for i in prod:
+						if(re.match(r'\S+', i)) and len(i)>0:
+
+							for k in range(0, len(Menu.produtos)):
+								if i != Menu.produtos[k].nome:
+									print "O nome do produto que você digitou não está presente na lista!\n"
+									print "Os produtos presentes na lista são: "
+									print "----------------------------------"
+									for k in range(0, len(Menu.produtos)):
+										print Menu.produtos[k].nome
+									print "----------------------------------"
+									break
+
+							marcador = 1
+
+					if marcador==1: #### quer dizer que tá tudo certo, então pode instaciar de forma correta
+
+
+						break
+
+					
+
+
+
+
+				
+
+
 
 
 
@@ -70,6 +120,7 @@ class Menu(object):
 				print "Você digitou de forma incorreta a informação, por favor digite novamente !\n"
 				print pergunta
 			nome = raw_input()
+			nome = nome.lower()
 		return nome
 
 	def verificaEntrada(self, palavra, op):
@@ -95,7 +146,7 @@ class Menu(object):
 
 			return True
 
-		elif (re.match(r'^[A-Z_a-z ]+$', palavra)) and op==5 and len(palavra)>0: ### aceita palavras apenas
+		elif (re.match(r'^[A-Za-z]+$', palavra)) and op==5 and len(palavra)>0: ### aceita palavras apenas
 
 			return True
 

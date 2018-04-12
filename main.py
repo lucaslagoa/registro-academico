@@ -8,30 +8,37 @@ if __name__ == '__main__':
 
 	sis = menu.Menu()
 
-	print "Digite 0 para adicionar dados ! \n"
-	print "Digite 1 para alteração de dados !\n"
-	print "Digite 2 para remoção de dados ! \n"
-	print "Digite 3 para visulizar os dados ! \n" 
-	
-	print "Digite a ação que deseja tomar:  \n"
-	opcao = raw_input()
+	while(1):
 
-	if int(opcao) == 0:
-
-		sis.adicionarDados()
+		print "Digite 0 para adicionar dados ! \n"
+		print "Digite 1 para alteração de dados !\n"
+		print "Digite 2 para remoção de dados ! \n"
+		print "Digite 3 para visulizar os dados ! \n"
+		print "Digite 4 para sair ! \n"
 		
-	elif int(opcao) == 1:
+		print "Digite a ação que deseja tomar:  \n"
+		opcao = raw_input()
 
-		sis.alterarDados()
+		if int(opcao) == 0:
 
-	elif int(opcao) == 2:
+			sis.adicionarDados()
+			
+		elif int(opcao) == 1:
 
-		sis.removerDados()
-	
-	elif int(opcao) == 3:
+			sis.alterarDados()
 
-		sis.visualizarDados()
+		elif int(opcao) == 2:
 
-	else:
+			sis.removerDados()
+		
+		elif int(opcao) == 3:
 
-		print " A OPÇÃO QUE VOCÊ DIGITOU ESTÁ INCORRETA ! TENTE NOVAMENTE ! "
+			sis.visualizarDados()
+
+		elif int(opcao) == 4:
+
+			break
+
+		else:
+
+			print " A OPÇÃO QUE VOCÊ DIGITOU ESTÁ INCORRETA ! TENTE NOVAMENTE ! "
