@@ -181,10 +181,35 @@ class Menu(object):
 
 			return True
 
+	def alterarInfo(self, lista): 
 
 	def alterarDados(self):
 
-		print 'everbody is doing the time'
+		print "O que você deseja alterar ? \n"
+		print "Digite 0 para alterar um produto !\n"
+		print "Digite 1 para alterar um cliente !\n"
+		print "Digite 2 para alterar uma venda !\n"
+		opcao = raw_input()
+
+		if int(opcao) == 0: ###### alterar um produto
+
+
+			Menu.alteraInfo(self, Menu.produtos)
+			
+
+		elif int(opcao) == 1: #### alterar um cliente
+
+			Menu.alteraInfo(self, Menu.clientes)
+
+		elif int(opcao) == 2: #### alterar uma venda
+
+			Menu.alteraInfo(self, Menu.itensVenda)
+
+			
+
+
+		else:
+			print " A opção que você digitou está incorreta, digite novamente ! "
 
 
 	def removeProdutos(self, tipo, lista):
@@ -290,13 +315,3 @@ class Menu(object):
 					print "Data da venda: ", dados[i].data
 					print "Itens da venda: ", dados[i].itens
 					print '\n'
-
-
-
-
-
-
-
-
-	
-
