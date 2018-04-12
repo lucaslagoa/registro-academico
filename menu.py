@@ -39,9 +39,9 @@ class Menu(object):
 			op = 4
 			endereco = Menu.coletaInfo(self, "Digite o endereço do Cliente: ", op)
 			op = 1
-			rg = Menu.coletaInfo(self, "Digite seu RG: (apenas números, por favor): ", op)
+			rg = Menu.coletaInfo(self, "Digite o RG: (apenas números, por favor): ", op)
 			op = 3
-			nascimento = Menu.coletaInfo(self, "Digite a sua data de nascimento: (no seguinte formato DD/MM/AAAA)", op)
+			nascimento = Menu.coletaInfo(self, "Digite a data de nascimento do Cliente: (no seguinte formato DD/MM/AAAA)", op)
 
 
 			Menu.clientes.append(cliente.Cliente(nascimento, rg, nome, endereco)) ### data de nascimento, rg, nome e endereço
@@ -189,7 +189,51 @@ class Menu(object):
 
 	def visualizarDados(self):
 
-		print 'oyeeeeeeeeeee'
+		print "Você selecionou o modo de visualização de dados, aqui serão dispostos todos os dados presentes até o momento ! \n"
+		Menu.imprimeDados(self, Menu.produtos, "produto")
+		Menu.imprimeDados(self, Menu.clientes, "cliente")
+		Menu.imprimeDados(self, Menu.itemVenda, "venda")
+	def imprimeDados(self, dados, tipoDado):
+
+		if len(dados)==0:
+
+			print "Não há informação para " + tipoDado
+
+		else:
+			print "Os dados para " + tipoDado + " são: "
+			print '---------------------------------'
+
+			for i in range(0, len(dados)):
+				
+				if tipoDado == "cliente":
+
+					print "Nome do cliente: ", dados[i].nome
+					print "Data de nascimento do cliente: ", dados[i].dataNascimento
+					print "RG do cliente: ", dados[i].rg
+					print "Endereço do cliente: ", dados[i].endereco
+					print '\n'
+
+				elif tipoDado == "produto":
+
+					print "Nome do produto: ", dados[i].nome
+					print "Código do produto: ", dados[i].codigo
+					print "Valor do produto: ", dados[i].valor
+					print '\n'
+				
+
+				elif tipoDado == "venda":
+
+					print "Número da venda: ", dados[i].numero
+					print "Data da venda: ", dados[i].data
+					print "Itens da venda: ", dados[i].itens
+					print '\n'
+
+
+
+
+
+
+
 
 	
 

@@ -1,4 +1,5 @@
 import abc
+
 class Totalizavel:
 ### classe abstrata
 	
