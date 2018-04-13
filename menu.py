@@ -13,7 +13,7 @@ class Menu(object):
 	clientes = [] #### lista de pessoas
 	itemVenda = [] ### lista de itens vendidos
 
-	def adicionarProtudos(self):
+	def adicionarProdutos(self, opcao, p):
 		op = 0
 		nome = Menu.coletaInfo(self, "Digite o nome do produto: ", op)
 		op = 1
@@ -21,9 +21,12 @@ class Menu(object):
 		op = 2
 		valor = Menu.coletaInfo(self, "Digite o preço do produto: ", op)
 		
-		Menu.produtos.append(produto.Produto(codigo, nome, valor)) #### instancia produto
+		if opcao == "adicionar":
+			Menu.produtos.append(produto.Produto(codigo, nome, valor)) #### instancia produto
+		else:
+			Menu.produtos[p] = produto.Produto(codigo, nome, valor)
 
-	def adicionarCliente(self):
+	def adicionarCliente(self, opcao, p):
 		op = 5
 		nome = Menu.coletaInfo(self, "Digite o nome do Cliente: ", op)
 		op = 4
@@ -33,10 +36,12 @@ class Menu(object):
 		op = 3
 		nascimento = Menu.coletaInfo(self, "Digite a data de nascimento do Cliente: (no seguinte formato DD/MM/AAAA)", op)
 
+		if opcao == "adicionar":
+			Menu.clientes.append(cliente.Cliente(nascimento, rg, nome, endereco)) ### data de nascimento, rg, nome e endereço
+		else:
+			Menu.clientes[p] = cliente.Cliente(nascimento, rg, nome, endereco)
 
-		Menu.clientes.append(cliente.Cliente(nascimento, rg, nome, endereco)) ### data de nascimento, rg, nome e endereço
-	
-	def adicionarVenda(self):
+	def adicionarVenda(self, opcao, p):
 
 		if len(Menu.produtos)>0: ## numero, data, itens (venda)
 
@@ -105,7 +110,10 @@ class Menu(object):
 									precos.append(Menu.produtos.preco)
 
 						for i in range(0, len(prod)): ### valor, quantidade, numero, data, itens
-							Menu.itemVenda.append(itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])) 
+							if opcao == "adicionar":
+								Menu.itemVenda.append(itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])) 
+							else:
+								Menu.itemVenda[i] = itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])
 
 
 					else:
@@ -130,15 +138,15 @@ class Menu(object):
 
 		if int(opcao) == 0: #### adicionar um produto 
 
-			Menu.adicionarProtudos(self)
+			Menu.adicionarProdutos(self, "adicionar", 0)
 			
 		elif int(opcao) == 1: ##### adiciona um cliente
 
-			Menu.adicionarCliente(self)
+			Menu.adicionarCliente(self, "adicionar", 0)
 		
 		elif int(opcao) == 2: ### adicionar uma venda
 
-			Menu.adicionarVenda(self)
+			Menu.adicionarVenda(self, "adicionar", 0)
 
 		else:
 
@@ -191,9 +199,27 @@ class Menu(object):
 
 			return True
 
-	def alterarInfo(self, lista): ###### função para alterar dados
+	def alterarInfo(self, lista, op): ###### função para alterar dados
 
-		print "OIOI"
+		Menu.imprimeDados(self, lista, op)
+		numero = 0
+		flag=0
+		while(1):
+			if flag== 1:
+				print "Você digitou um número que não está presente na lista, por favor digite novamente: "
+			flag=1	
+			aux = 0
+			numero = Menu.coletaInfo(self, "Digite o número do "+op+" que deseja alterar: ", aux)
+			numero = int(numero)
+
+			if numero<=len(lista)-1:
+				aux = 6
+				resp = Menu.coletaInfo(self, "Você deseja alterar o "+op+" : " + lista[numero].nome + " ? (Digite S para sim e N para não)", aux)
+				if op == "produto": Menu.adicionarProdutos(self, "alterar", numero)
+				elif op == "cliente":Menu.adicionarCliente(self, "alterar", numero)
+				elif op == "venda":Menu.adicionarVenda(self, "alterar", numero)
+				break
+
 
 	def alterarDados(self):
 
@@ -206,26 +232,24 @@ class Menu(object):
 		if int(opcao) == 0: ###### alterar um produto
 
 
-			Menu.alteraInfo(self, Menu.produtos)
+			Menu.alterarInfo(self, Menu.produtos, "produto")
 			
 
 		elif int(opcao) == 1: #### alterar um cliente
 
-			Menu.alteraInfo(self, Menu.clientes)
+			Menu.alterarInfo(self, Menu.clientes, "cliente")
 
 		elif int(opcao) == 2: #### alterar uma venda
 
-			Menu.alteraInfo(self, Menu.itensVenda)
+			Menu.alterarInfo(self, Menu.itensVenda, "venda")
 
 			
-
-
 		else:
 			print " A opção que você digitou está incorreta, digite novamente ! "
 
 
 	def removeProdutos(self, tipo, lista):
-		numeroProd = -1
+		numeroProd = 0
 		op = 1
 		flag=0
 		while(1):
