@@ -107,13 +107,13 @@ class Menu(object):
 						for i in range(0, len(prod)):
 							for j in range(0, len(Menu.produtos)):
 								if prod[i] == Menu.produtos[j].nome:
-									precos.append(Menu.produtos.preco)
+									precos.append(Menu.produtos[j].valor)
 
 						for i in range(0, len(prod)): ### valor, quantidade, numero, data, itens
 							if opcao == "adicionar":
-								Menu.itemVenda.append(itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])) 
+								Menu.itemVenda.append(itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])) 
 							else:
-								Menu.itemVenda[i] = itemVenda.ItemVenda(precos[i], quant[i], numero, prods[i])
+								Menu.itemVenda[i] = itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])
 
 
 					else:
@@ -241,7 +241,7 @@ class Menu(object):
 
 		elif int(opcao) == 2: #### alterar uma venda
 
-			Menu.alterarInfo(self, Menu.itensVenda, "venda")
+			Menu.alterarInfo(self, Menu.itemVenda, "venda")
 
 			
 		else:
@@ -304,7 +304,7 @@ class Menu(object):
 
 		elif int(opcao) == 2:
 
-			Menu.removeItens(self, "venda", Menu.itensVenda)
+			Menu.removeItens(self, "venda", Menu.itemVenda)
 
 
 		else:
