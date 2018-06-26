@@ -114,8 +114,8 @@ class Menu(object):
 								Menu.itemVenda.append(itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])) 
 							else:
 								Menu.itemVenda[i] = itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])
-
-
+						flag = 0
+						marcador = 0
 					else:
 						print "O nome do produto que você digitou não está presente na lista!\n"
 						print "Os produtos presentes na lista são: "
@@ -261,7 +261,10 @@ class Menu(object):
 
 			if numeroProd<=len(lista)-1:
 				op = 6
-				resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].nome + " ? (Digite S para sim e N para não)", op)
+				if tipo == 'venda':
+					resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].venda.numero + " ? (Digite S para sim e N para não)", op)
+				else:
+					resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].nome + " ? (Digite S para sim e N para não)", op)
 
 				return resp, numeroProd
 
@@ -347,7 +350,7 @@ class Menu(object):
 
 				elif tipoDado == "venda":
 					print "Venda " + str(i)
-					print "Número da venda: ", dados[i].numero
-					print "Data da venda: ", dados[i].data
-					print "Itens da venda: ", dados[i].itens
+					print "Número da venda: ", dados[i].venda.numero
+					print "Data da venda: ", dados[i].venda.data
+					print "Itens da venda: ", dados[i].venda.itens
 					print '\n'

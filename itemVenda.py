@@ -1,5 +1,5 @@
 import totalizavel
-import venda
+import venda as sell
 
 class itemVenda(totalizavel.Totalizavel):
 
@@ -8,4 +8,4 @@ class itemVenda(totalizavel.Totalizavel):
 
 		self.quantidade = quantidade
 		self.valor = valor
-		venda.Venda(numero, data, itens)
+		self.venda = sell.Venda(numero, data, itens)
