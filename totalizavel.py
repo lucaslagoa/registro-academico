@@ -4,5 +4,5 @@ class Totalizavel:
 ### classe abstrata
 	
 	@abc.abstractmethod
-	def total(self, produtos):
+	def total(self):
 		pass

@@ -5,13 +5,14 @@ import produto
 import re
 import cliente
 import itemVenda
+import venda
 
 
 class Menu(object):
 
 	produtos = [] ### lista de produtos
 	clientes = [] #### lista de pessoas
-	itemVenda = [] ### lista de itens vendidos
+	vendas_menu = [] ### lista de itens vendidos
 
 	def adicionarProdutos(self, opcao, p):
 		op = 0
@@ -52,6 +53,7 @@ class Menu(object):
 				nome = Menu.coletaInfo(self, "Digite o nome do Cliente: ", op)
 				for i in range(0, len(Menu.clientes)):
 					if Menu.clientes[i].nome == nome:
+						cliente = Menu.clientes[i]
 						marcador = 1
 
 				if marcador == 0:
@@ -59,7 +61,7 @@ class Menu(object):
 					print "Os nomes presentes na lista de clientes são: \n"
 					print "-------------------------------"
 					for i in range(0, len(Menu.clientes)):
-						print Menu.clientes[i].nomes
+						print Menu.clientes[i].nome
 					print "-------------------------------"
 					nome = " "
 				else:
@@ -75,56 +77,50 @@ class Menu(object):
 				dataVenda = Menu.coletaInfo(self, "Digite a data da venda: (no seguinte formato DD/MM/AAAA)", op)
 				flag=0
 				marcador=0
-				while(1):
-					if flag==1:
-						print "Você digitou o nome dos produtos fora do formato, por favor digite novamente! \n"
-						
-					print "Digite os produtos: (no seguinte formato: produto1, produto2, ...)"
-					flag=1
-					prod = raw_input()
-					try:
-						prod = prod.split(',')
-					except:
-						prod = prod
+				if flag==1:
+					print "Você digitou o nome dos produtos fora do formato, por favor digite novamente! \n"
+					
+				print "Digite os produtos: (no seguinte formato: produto1,produto2, ...) sem espaços"
+				flag=1
+				prod = raw_input()
+				try:
+					prod = prod.split(',')
+				except:
+					prod = prod
 
-					for i in prod:
-						if(re.match(r'\S+', i)) and len(i)>0:
-
-							for k in range(0, len(Menu.produtos)):
-								if i == Menu.produtos[k].nome:
-									marcador = 1
-
-							
-					prod = sorted(prod) ### ordenando os produtos por nome
-
-					if marcador==1: #### quer dizer que tá tudo certo, então pode instaciar de forma correta
-						quant = []
-						for i in range(0, len(prod)):
-							op = 1
-							quant.append(Menu.coletaInfo(self, "Digite a quantidade de produtos do tipo " + prod[i] + " foram comprados: ", op))
-						precos = []
-
-						for i in range(0, len(prod)):
-							for j in range(0, len(Menu.produtos)):
-								if prod[i] == Menu.produtos[j].nome:
-									precos.append(Menu.produtos[j].valor)
-
-						for i in range(0, len(prod)): ### valor, quantidade, numero, data, itens
-							if opcao == "adicionar":
-								Menu.itemVenda.append(itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])) 
-							else:
-								Menu.itemVenda[i] = itemVenda.itemVenda(precos[i], quant[i], numero,dataVenda[i], prod[i])
-						flag = 0
-						marcador = 0
-					else:
-						print "O nome do produto que você digitou não está presente na lista!\n"
-						print "Os produtos presentes na lista são: "
-						print "----------------------------------"
+				for i in prod: # verifica se os produtos foram cadastrados
+					if(re.match(r'\S+', i)) and len(i)>0:
 						for k in range(0, len(Menu.produtos)):
-							print Menu.produtos[k].nome
-						print "----------------------------------"
-						break
+							if i == Menu.produtos[k].nome:
+								marcador = 1
+								break;
+							marcador = 0
+						if marcador == 0:
+							print "\n\nATENÇÃO: Produto " + i + " não existe!\n\n"
 
+						
+				prod = sorted(prod) ### ordenando os produtos por nome
+
+				if marcador==1: #### quer dizer que tá tudo certo, então pode instaciar de forma correta
+					vendaItens = []
+					for i in range(0, len(prod)):
+						op = 1
+						quantidade = Menu.coletaInfo(self, "Digite a quantidade de produtos do tipo " + prod[i] + " foram comprados: ", op)
+						
+						for j in range(0, len(Menu.produtos)):
+							if prod[i] == Menu.produtos[j].nome:
+								produto = Menu.produtos[j].nome
+								valor = Menu.produtos[j].valor
+								break
+						vendaItens.append(itemVenda.itemVenda(produto, valor, quantidade))
+
+					venda_atual = venda.Venda(numero, dataVenda, cliente, vendaItens)
+					if opcao == "adicionar":
+						self.vendas_menu.append(venda_atual)
+					else:
+						self.vendas_menu[p] = venda_atual
+
+					venda_atual.imprimir()
 		else:
 			print "Não existem produtos para serem vendidos ! Cadastre um produto para depois vende-lo !"
 
@@ -201,6 +197,9 @@ class Menu(object):
 
 	def alterarInfo(self, lista, op): ###### função para alterar dados
 
+		if len(lista) == 0 :
+			print "Não há " + op + " para alterar.\n"
+			return
 		Menu.imprimeDados(self, lista, op)
 		numero = 0
 		flag=0
@@ -214,7 +213,10 @@ class Menu(object):
 
 			if numero<=len(lista)-1:
 				aux = 6
-				resp = Menu.coletaInfo(self, "Você deseja alterar o "+op+" : " + lista[numero].nome + " ? (Digite S para sim e N para não)", aux)
+				if op != "venda":
+					resp = Menu.coletaInfo(self, "Você deseja alterar o "+op+" : " + lista[numero].nome + " ? (Digite S para sim e N para não)", aux)
+				else:
+					resp = Menu.coletaInfo(self, "Você deseja alterar o "+op+" : " + lista[numero].numero + " ? (Digite S para sim e N para não)", aux)
 				if op == "produto": Menu.adicionarProdutos(self, "alterar", numero)
 				elif op == "cliente":Menu.adicionarCliente(self, "alterar", numero)
 				elif op == "venda":Menu.adicionarVenda(self, "alterar", numero)
@@ -231,9 +233,7 @@ class Menu(object):
 
 		if int(opcao) == 0: ###### alterar um produto
 
-
 			Menu.alterarInfo(self, Menu.produtos, "produto")
-			
 
 		elif int(opcao) == 1: #### alterar um cliente
 
@@ -241,8 +241,7 @@ class Menu(object):
 
 		elif int(opcao) == 2: #### alterar uma venda
 
-			Menu.alterarInfo(self, Menu.itemVenda, "venda")
-
+			Menu.alterarInfo(self, Menu.vendas_menu, "venda")
 			
 		else:
 			print " A opção que você digitou está incorreta, digite novamente ! "
@@ -262,7 +261,7 @@ class Menu(object):
 			if numeroProd<=len(lista)-1:
 				op = 6
 				if tipo == 'venda':
-					resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].venda.numero + " ? (Digite S para sim e N para não)", op)
+					resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].numero + " ? (Digite S para sim e N para não)", op)
 				else:
 					resp = Menu.coletaInfo(self, "Você deseja retirar o "+tipo+" : " + lista[numeroProd].nome + " ? (Digite S para sim e N para não)", op)
 
@@ -307,7 +306,7 @@ class Menu(object):
 
 		elif int(opcao) == 2:
 
-			Menu.removeItens(self, "venda", Menu.itemVenda)
+			Menu.removeItens(self, "venda", Menu.vendas_menu)
 
 
 		else:
@@ -318,14 +317,12 @@ class Menu(object):
 		print "Você selecionou o modo de visualização de dados, aqui serão dispostos todos os dados presentes até o momento ! \n"
 		Menu.imprimeDados(self, Menu.produtos, "produto")
 		Menu.imprimeDados(self, Menu.clientes, "cliente")
-		Menu.imprimeDados(self, Menu.itemVenda, "venda")
+		Menu.imprimeDados(self, Menu.vendas_menu, "venda")
 
 	def imprimeDados(self, dados, tipoDado):
 
 		if len(dados)==0:
-
-			print "Não há informação para " + tipoDado
-
+			print "Não há informação para " + tipoDado + "\n"
 		else:
 			print "Os dados para " + tipoDado + " são: "
 			print '---------------------------------'
@@ -334,23 +331,11 @@ class Menu(object):
 				
 				if tipoDado == "cliente":
 					print "Cliente " + str(i)
-					print "Nome do cliente: ", dados[i].nome
-					print "Data de nascimento do cliente: ", dados[i].dataNascimento
-					print "RG do cliente: ", dados[i].rg
-					print "Endereço do cliente: ", dados[i].endereco
-					print '\n'
-
+					
 				elif tipoDado == "produto":
 					print "Produto "+ str(i)
-					print "Nome do produto: ", dados[i].nome
-					print "Código do produto: ", dados[i].codigo
-					print "Valor do produto: ", dados[i].valor
-					print '\n'
 				
-
 				elif tipoDado == "venda":
 					print "Venda " + str(i)
-					print "Número da venda: ", dados[i].venda.numero
-					print "Data da venda: ", dados[i].venda.data
-					print "Itens da venda: ", dados[i].venda.itens
-					print '\n'
+
+				dados[i].imprimir()

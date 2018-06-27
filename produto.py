@@ -11,4 +11,8 @@ class Produto(object):
 		self.nome = nome
 		self.valor = valor
 
-		
+	def imprimir(self):
+		print "Nome do produto: ", self.nome
+		print "Código do produto: ", self.codigo
+		print "Valor do produto: ", self.valor
+		print '\n'

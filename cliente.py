@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import pessoa
 
 class Cliente(pessoa.Pessoa):
@@ -9,3 +10,9 @@ class Cliente(pessoa.Pessoa):
 		self.rg = rg
 		super(Cliente, self).__init__(nome, endereco)
 
+	def imprimir(self):
+		print "Nome do cliente: ", self.nome
+		print "Data de nascimento do cliente: ", self.dataNascimento
+		print "RG do cliente: ", self.rg
+		print "Endereço do cliente: ", self.endereco
+		print '\n'
